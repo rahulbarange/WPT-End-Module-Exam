@@ -1,0 +1,72 @@
+<html>
+      <head>
+            <script src="jquery-3.5.1.min.js"></script>
+            <script>
+                  $(()=>{
+                        console.log('dom loaded');
+                       
+                       
+                        function showall(){
+                              let bookavailable={};
+                              let input={};
+                              let parafun={
+                                    data:input,
+                                    url:'http://localhost:8081/showall',
+                                    type:'get',
+                                    dataType:'json',
+                                    success:(datafromserver)=>{
+                                          console.log('data fetch successfully');
+                                          bookavailable=datafromserver;
+                                         let books='';
+                                         for(let i=0;datafromserver.length;i++){
+                                          books += "<br/>" + bookavailable.bookid +" "+ bookavailable.bookname+" "+ bookavailable.price;
+                                         }
+                                         $('#showall').text(books);
+
+
+                                    },
+                                    error:(datafromserver)=>{
+                                          console.log('data not fetched');
+
+                                    }
+                              }
+                              $.ajax(parafun);
+
+                        }
+                        showall();
+                        $('#btn').click(()=>{
+                              console.log('button clicked');
+                              let input={bookid:$('#bookid').val(),bookname:$('#bookname').val(),price:$('#price').val()};
+                              let parafun={
+                                    data:input,
+                                    url:'http://localhost:8081/addbook',
+                                    type:'get',
+                                    dataType:'json',
+                                    success:(datafromserver)=>{
+                                          console.log('data fetch successfully');
+                                          if(datafromserver.status===true){
+                                                $('#msg').text("book added successfully");
+                                          }
+                                          else{
+                                                $('#msg').text("book not added");
+                                          }
+
+                                    },
+                                    error:(datafromserver)=>{
+                                          console.log('data not fetched');
+
+                                    }
+                              }
+                              $.ajax(parafun);
+                        });
+                  });
+            </script>
+      </head>
+      <body>
+            Book id <input type="text" id="bookid"> <span id="msg">what happened book added or not</span><br><br>
+            book name <input type="text" id="bookname"><br><br>
+            price <input type="text" id="price"><br><br>
+            <input type="button" value="add a book" id="btn"><br><br>
+            <span id="showall">show all books here</span>
+      </body>
+</html>
